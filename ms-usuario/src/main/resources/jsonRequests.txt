@@ -1,0 +1,47 @@
+Usuário
+
+POST - http://localhost:8082/ms-usuario/usuarios
+
+{
+  "nome":"Carlos",
+  "email":"Carlos",
+  "password":"123"
+}
+
+PUT - http://localhost:8082/ms-usuario/usuarios/1 (1 é o id do usuário)
+{
+  "nome": "ronaldo",
+  "email": "ronaldo@gmail.com",
+  "password": "123"
+}
+
+
+POST - posts
+
+POST - http://localhost:8082/ms-usuario/posts?usuarioId=2 (2 é o id do usuário)
+{
+  "nome":"Como comer menos",
+  "descricao":"comendo menos vc perde peso",
+  "conteudo":"asdasdasd"
+}
+
+PUT - http://localhost:8082/ms-usuario/posts/1 (1 é o numero do id do post)
+{
+  "nome":"Arrumando a mesa",
+  "descricao":"asdasd",
+  "conteudo":"asdasdasd"
+}
+
+Comentario
+
+POST - http://localhost:8082/ms-usuario/comentarios?postId=2&usuarioId=2
+
+{
+  "nome":"Post bacana"
+}
+
+PUT - http://localhost:8082/ms-usuario/comentarios/2
+
+{
+  "nome":"Arroz na pamonha"
+}

@@ -1,11 +1,10 @@
-package br.com.vidaMaterna.msusuario.dto;
+package br.com.vidamaterna.mspost.dto;
 
-import javax.validation.constraints.NotNull;
+import br.com.vidamaterna.mspost.model.Comentario;
 
 public class ComentarioDTO {
 
   private long id;
-  @NotNull(message = "O comentário é obrigatório")
   private String nome;
 
   public ComentarioDTO() {
@@ -17,6 +16,11 @@ public class ComentarioDTO {
     this.nome = nome;
   }
 
+  public ComentarioDTO(Comentario entity) {
+    this.id = entity.getId();
+    this.nome = entity.getNome();
+  }
+
   public long getId() {
     return id;
   }
@@ -24,6 +28,7 @@ public class ComentarioDTO {
   public void setId(long id) {
     this.id = id;
   }
+
 
   public String getNome() {
     return nome;

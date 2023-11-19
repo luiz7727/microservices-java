@@ -1,7 +1,7 @@
-package br.com.vidaMaterna.msusuario.controller;
+package br.com.vidamaterna.mspost.controller;
 
-import br.com.vidaMaterna.msusuario.dto.ComentarioDTO;
-import br.com.vidaMaterna.msusuario.service.ComentarioService;
+import br.com.vidamaterna.mspost.dto.ComentarioDTO;
+import br.com.vidamaterna.mspost.service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +29,12 @@ public class ComentarioController {
   public ResponseEntity<ComentarioDTO> findById(@PathVariable(name = "id") long id) {
     ComentarioDTO comentario = comentarioService.findById(id);
     return ResponseEntity.ok(comentario);
+  }
+
+  @GetMapping("/findAllComentariosDeUmUsuario/{usuarioId}")
+  public ResponseEntity<List<ComentarioDTO>> findAllComentariosDeUmUsuario(@PathVariable(name = "usuarioId") long usuarioId) {
+    List<ComentarioDTO> posts = comentarioService.findAllComentariosDeUmUsuario(usuarioId);
+    return ResponseEntity.ok(posts);
   }
 
   @PostMapping()

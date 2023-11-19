@@ -1,4 +1,4 @@
-package br.com.vidaMaterna.msusuario.model;
+package br.com.vidamaterna.mspost.model;
 
 import javax.persistence.*;
 
@@ -12,8 +12,7 @@ public class Comentario {
 
   private String nome;
 
-  @ManyToOne(optional = false)
-  private Usuario usuario;
+  private long usuarioId;
 
   @ManyToOne(optional = false)
   private Post post;
@@ -21,9 +20,9 @@ public class Comentario {
   public Comentario() {
 
   }
-  public Comentario(String nome, Usuario usuario, Post post) {
+  public Comentario(String nome, long usuarioId, Post post) {
     this.nome = nome;
-    this.usuario = usuario;
+    this.usuarioId = usuarioId;
     this.post = post;
   }
 
@@ -39,12 +38,12 @@ public class Comentario {
     this.nome = nome;
   }
 
-  public Usuario getUsuario() {
-    return usuario;
+  public long getUsuarioId() {
+    return usuarioId;
   }
 
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
+  public void setUsuario(long usuarioId) {
+    this.usuarioId = usuarioId;
   }
 
   public Post getPosts() {

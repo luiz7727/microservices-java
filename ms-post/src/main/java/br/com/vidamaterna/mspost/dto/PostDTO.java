@@ -1,4 +1,6 @@
-package br.com.vidaMaterna.msusuario.dto;
+package br.com.vidamaterna.mspost.dto;
+
+import br.com.vidamaterna.mspost.model.Post;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -33,6 +35,13 @@ public class PostDTO {
     this.comentarios = comentarios;
   }
 
+  public PostDTO(Post entity) {
+    this.id = entity.getId();
+    this.nome = entity.getNome();
+    this.descricao = entity.getDescricao();
+    this.conteudo = entity.getConteudo();
+    this.comentarios = entity.getComentarios().stream().map((comentario -> new ComentarioDTO(comentario.getId(),comentario.getNome()))).collect(Collectors.toList());
+  }
 
   public long getId() {
     return id;

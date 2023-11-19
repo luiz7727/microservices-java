@@ -1,6 +1,7 @@
-package br.com.vidaMaterna.msusuario.model;
+package br.com.vidamaterna.mspost.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +13,14 @@ public class Post {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull(message = "O nome é obrigatório")
   private String nome;
+  @NotNull(message = "A descrição é obrigatório")
   private String descricao;
+  @NotNull(message = "O conteúdo é obrigatório")
   private String conteudo;
 
-  @ManyToOne(optional = false)
-  private Usuario usuario;
+  private long usuarioId;
 
   @OneToMany(cascade = CascadeType.PERSIST,mappedBy = "post")
   private List<Comentario> comentarios = new ArrayList<>();
@@ -26,11 +29,11 @@ public class Post {
 
   }
 
-  public Post(String nome, String descricao, String conteudo, Usuario usuario, List<Comentario> comentarios) {
+  public Post(String nome, String descricao, String conteudo, long usuarioId, List<Comentario> comentarios) {
     this.nome = nome;
     this.descricao = descricao;
     this.conteudo = conteudo;
-    this.usuario = usuario;
+    this.usuarioId = usuarioId;
     this.comentarios = comentarios;
   }
 
@@ -62,12 +65,12 @@ public class Post {
     this.conteudo = conteudo;
   }
 
-  public Usuario getUsuario() {
-    return usuario;
+  public long getUsuarioId() {
+    return usuarioId;
   }
 
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
+  public void setUsuarioId(long usuarioId) {
+    this.usuarioId = usuarioId;
   }
 
   public List<Comentario> getComentarios() {

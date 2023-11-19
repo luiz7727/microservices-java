@@ -1,13 +1,13 @@
-package br.com.vidaMaterna.msusuario.service;
+package br.com.vidamaterna.mspost.service;
 
-import br.com.vidaMaterna.msusuario.dto.ComentarioDTO;
-import br.com.vidaMaterna.msusuario.model.Comentario;
-import br.com.vidaMaterna.msusuario.model.Post;
-import br.com.vidaMaterna.msusuario.model.Usuario;
-import br.com.vidaMaterna.msusuario.repository.ComentarioRepository;
-import br.com.vidaMaterna.msusuario.repository.PostsRepository;
-import br.com.vidaMaterna.msusuario.repository.UsuarioRepository;
-import br.com.vidaMaterna.msusuario.service.exception.ResourceNotFoundException;
+import br.com.vidamaterna.mspost.dto.ComentarioDTO;
+import br.com.vidamaterna.mspost.dto.UsuarioDTO;
+import br.com.vidamaterna.mspost.http.UsuarioClient;
+import br.com.vidamaterna.mspost.model.Comentario;
+import br.com.vidamaterna.mspost.model.Post;
+import br.com.vidamaterna.mspost.repository.ComentarioRepository;
+import br.com.vidamaterna.mspost.repository.PostRepository;
+import br.com.vidamaterna.mspost.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +16,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
 public class ComentarioService {
 
   @Autowired
   private ComentarioRepository comentarioRepository;
 
   @Autowired
-  private UsuarioRepository usuarioRepository;
+  private PostRepository postsRepository;
 
   @Autowired
-  private PostsRepository postsRepository;
+  private UsuarioClient usuarioClient;
 
   @Transactional
   public List<ComentarioDTO> findAll() {
     return comentarioRepository.findAll().stream().map(ComentarioDTO::new).collect(Collectors.toList());
+  }
+
+  @Transactional
+  public List<ComentarioDTO> findAllComentariosDeUmUsuario(long usuarioId) {
+    return comentarioRepository.findAllByUsuarioId(usuarioId).stream().map(ComentarioDTO::new).collect(Collectors.toList());
   }
 
   @Transactional
@@ -41,21 +47,15 @@ public class ComentarioService {
 
   @Transactional
   public ComentarioDTO insert(long postId,long usuarioId, ComentarioDTO comentarioDTO) {
-    Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. ID: " + usuarioId));
+    UsuarioDTO usuario = usuarioClient.pegarUsuarioPeloId(usuarioId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. ID: " + usuarioId));
     Post post = postsRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post não encontrado. ID: " + usuarioId));
 
-    Comentario comentario = new Comentario();
-    comentario.setNome(comentarioDTO.getNome());
-    comentario.setUsuario(usuario);
-    comentario.setPosts(post);
+    Comentario comentario = new Comentario(comentarioDTO.getNome(),usuario.getId(),post);
     comentarioRepository.save(comentario);
 
-    List<Comentario> comentarios = post.getComentarios();
-    comentarios.add(comentario);
-    post.setComentarios(comentarios);
+    post.getComentarios().add(comentario);
 
-    postsRepository.save(post);
-    usuarioRepository.save(usuario);
+    comentarioRepository.save(comentario);
     return new ComentarioDTO(comentario);
   }
   @Transactional

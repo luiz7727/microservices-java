@@ -1,37 +1,22 @@
-package br.com.vidaMaterna.msusuario.dto;
+package br.com.vidamaterna.mspost.dto;
 
-import br.com.vidaMaterna.msusuario.model.Usuario;
-
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UsuarioDTO {
 
   private long id;
-
-  @NotNull(message = "O nome é obrigatório")
   private String nome;
-  @NotNull(message = "O email é obrigatório")
   private String email;
-  @NotNull(message = "A senha é obrigatória")
   private String senha;
 
-  private List<ComentarioDTO> comentarios = new ArrayList<>();
   private List<PostDTO> posts = new ArrayList<>();
+  private List<ComentarioDTO> comentarios = new ArrayList<>();
 
   public UsuarioDTO() {
 
   }
 
-
-  public UsuarioDTO(long id, String nome, String email, String senha) {
-    this.id = id;
-    this.nome = nome;
-    this.email = email;
-    this.senha = senha;
-  }
   public UsuarioDTO(long id, String nome, String email, String senha, List<ComentarioDTO> comentarios, List<PostDTO> posts) {
     this.id = id;
     this.nome = nome;
@@ -89,5 +74,4 @@ public class UsuarioDTO {
   public void setPosts(List<PostDTO> posts) {
     this.posts = posts;
   }
-
 }

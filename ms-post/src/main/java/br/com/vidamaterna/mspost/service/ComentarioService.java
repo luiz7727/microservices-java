@@ -8,6 +8,7 @@ import br.com.vidamaterna.mspost.model.Post;
 import br.com.vidamaterna.mspost.repository.ComentarioRepository;
 import br.com.vidamaterna.mspost.repository.PostRepository;
 import br.com.vidamaterna.mspost.service.exception.ResourceNotFoundException;
+import br.com.vidamaterna.mspost.service.exception.ServerNotAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class ComentarioService {
 
 
     if(responseEntity.getStatusCode().value() == 503) {
-      throw new ResourceNotFoundException("0 ms-usuario precisa estar ligado para funcionar");
+      throw new ServerNotAvailableException("0 ms-usuario precisa estar ligado para funcionar");
     }
 
     if(responseEntity.getStatusCode().value() == 404) {

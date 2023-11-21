@@ -6,19 +6,21 @@ public class ComentarioDTO {
 
   private long id;
   private String nome;
-
+  private long usuarioId;
   public ComentarioDTO() {
 
   }
 
-  public ComentarioDTO(long id,String nome) {
+  public ComentarioDTO(long id,String nome, long usuarioId) {
     this.id = id;
     this.nome = nome;
+    this.usuarioId = usuarioId;
   }
 
   public ComentarioDTO(Comentario entity) {
     this.id = entity.getId();
     this.nome = entity.getNome();
+    this.usuarioId = entity.getUsuarioId();
   }
 
   public long getId() {
@@ -36,5 +38,13 @@ public class ComentarioDTO {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public long getUsuarioId() {
+    return usuarioId;
+  }
+
+  public void setUsuarioId(long usuarioId) {
+    this.usuarioId = usuarioId;
   }
 }

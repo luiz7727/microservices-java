@@ -1,6 +1,7 @@
 package br.com.vidaMaterna.msusuario.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -11,8 +12,12 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull(message = "O nome é obrigatório")
   private String nome;
+  @NotNull(message = "O email é obrigatório")
   private String email;
+  @NotNull(message = "A senha é obrigatória")
+
   private String senha;
 
 

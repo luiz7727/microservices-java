@@ -20,6 +20,8 @@ public class PostDTO {
   @NotNull(message = "O conteúdo do post obrigatório")
   private String conteudo;
 
+  private long usuarioId;
+
   private List<ComentarioDTO> comentarios = new ArrayList<>();
 
 
@@ -27,11 +29,12 @@ public class PostDTO {
 
   }
 
-  public PostDTO(long id, String nome, String descricao, String conteudo, List<ComentarioDTO> comentarios) {
+  public PostDTO(long id, String nome, String descricao, String conteudo,long usuarioId, List<ComentarioDTO> comentarios) {
     this.id = id;
     this.nome = nome;
     this.descricao = descricao;
     this.conteudo = conteudo;
+    this.usuarioId = usuarioId;
     this.comentarios = comentarios;
   }
 
@@ -40,7 +43,8 @@ public class PostDTO {
     this.nome = entity.getNome();
     this.descricao = entity.getDescricao();
     this.conteudo = entity.getConteudo();
-    this.comentarios = entity.getComentarios().stream().map((comentario -> new ComentarioDTO(comentario.getId(),comentario.getNome()))).collect(Collectors.toList());
+    this.usuarioId = entity.getUsuarioId();
+    this.comentarios = entity.getComentarios().stream().map((comentario -> new ComentarioDTO(comentario.getId(),comentario.getNome(),comentario.getUsuarioId()))).collect(Collectors.toList());
   }
 
   public long getId() {
@@ -73,6 +77,14 @@ public class PostDTO {
 
   public void setConteudo(String conteudo) {
     this.conteudo = conteudo;
+  }
+
+  public long getUsuarioId() {
+    return usuarioId;
+  }
+
+  public void setUsuarioId(long usuarioId) {
+    this.usuarioId = usuarioId;
   }
 
   public List<ComentarioDTO> getComentarios() {

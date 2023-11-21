@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
@@ -26,19 +27,19 @@ public class PostController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<PostDTO> findById(@PathVariable(name = "id") long id) {
+  public ResponseEntity<PostDTO> findById(@PathVariable(name = "id") @Valid @Positive(message = "O id do post precisa ser positivo") @NotNull(message = "Informe o id do post na url, Ex: '/posts/1' ") long id) {
     PostDTO post = postService.findById(id);
     return ResponseEntity.ok(post);
   }
 
   @GetMapping("/findAllPostsDeUmUsuario/{usuarioId}")
-  public ResponseEntity<List<PostDTO>> findAllPeloUsuarioId(@PathVariable(name = "usuarioId") long usuarioId) {
+  public ResponseEntity<List<PostDTO>> findAllPeloUsuarioId(@PathVariable(name = "usuarioId") @Valid @Positive(message = "O id do usuário precisa ser positivo") @NotNull(message = "Informe o id do post na url, Ex: '/posts/findAllPostsDeUmUsuario/1' ") long usuarioId) {
     List<PostDTO> posts = postService.findAllPeloUsuarioId(usuarioId);
     return ResponseEntity.ok(posts);
   }
 
   @PostMapping()
-  public ResponseEntity<PostDTO> insert(@RequestParam(name = "usuarioId") long usuarioId,@Valid @RequestBody PostDTO postDTO) {
+  public ResponseEntity<PostDTO> insert(@RequestParam(name = "usuarioId") @Valid @Positive(message = "O id do usuário precisa ser positivo") @NotNull(message = "Informe o id do usuário na url, Ex: '/posts/1' ") long usuarioId,@Valid @RequestBody PostDTO postDTO) {
     PostDTO post = postService.insert(usuarioId,postDTO);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
             .buildAndExpand(post.getId())
@@ -47,13 +48,13 @@ public class PostController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<PostDTO> update(@PathVariable @Valid @Positive Long id, @Valid @RequestBody PostDTO postDTO) {
+  public ResponseEntity<PostDTO> update(@PathVariable @Valid @Positive(message = "O id do post precisa ser positivo") @NotNull(message = "Informe o id do post na url, Ex: '/posts/1' ") Long id, @Valid @RequestBody PostDTO postDTO) {
     PostDTO postDto = postService.update(id, postDTO);
     return ResponseEntity.ok(postDto);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable @Valid @Positive(message = "O id do post precisa ser positivo") @NotNull(message = "Informe o ") Long id) {
     postService.delete(id);
 
     return ResponseEntity.noContent().build();

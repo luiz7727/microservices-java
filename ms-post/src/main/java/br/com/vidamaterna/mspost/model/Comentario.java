@@ -1,6 +1,7 @@
 package br.com.vidamaterna.mspost.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tb_comentario")
@@ -10,8 +11,10 @@ public class Comentario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull(message = "O nome é obrigatório")
   private String nome;
 
+  @NotNull(message = "O id do usuário é obrigatório")
   private long usuarioId;
 
   @ManyToOne(optional = false)
@@ -20,7 +23,7 @@ public class Comentario {
   public Comentario() {
 
   }
-  public Comentario(String nome, long usuarioId, Post post) {
+  public Comentario(String nome,long usuarioId, Post post) {
     this.nome = nome;
     this.usuarioId = usuarioId;
     this.post = post;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
@@ -26,7 +27,7 @@ public class UsuarioController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UsuarioDTO> findById(@PathVariable(name = "id") long id) {
+  public ResponseEntity<UsuarioDTO> findById(@PathVariable(name = "id") @Valid @Positive(message = "O id do usuário precisa ser positivo") @NotNull(message = "Informe o id do usuário na url, Ex: '/usuarios/1' ") long id) {
     UsuarioDTO usuario = usuarioService.findById(id);
     return ResponseEntity.ok(usuario);
   }
@@ -41,13 +42,13 @@ public class UsuarioController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UsuarioDTO> update(@PathVariable @Valid @Positive Long id, @Valid @RequestBody UsuarioDTO clienteDTO) {
+  public ResponseEntity<UsuarioDTO> update(@PathVariable @Valid @Positive(message = "O id do usuário precisa ser positivo") @NotNull(message = " Informe o id do usuário na url, Ex: '/usuarios/1' ") Long id, @Valid @RequestBody UsuarioDTO clienteDTO) {
     UsuarioDTO usuarioDTO = usuarioService.update(id, clienteDTO);
     return ResponseEntity.ok(usuarioDTO);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable @Valid @Positive(message = "o id do usuário precisa ser positivo") @NotNull(message = "Informe o id do usuário na url, Ex: '/usuarios/1'") Long id) {
     usuarioService.delete(id);
 
     return ResponseEntity.noContent().build();

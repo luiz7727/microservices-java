@@ -9,6 +9,7 @@ import br.com.vidamaterna.mspost.repository.ComentarioRepository;
 import br.com.vidamaterna.mspost.repository.PostRepository;
 import br.com.vidamaterna.mspost.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +48,15 @@ public class ComentarioService {
 
   @Transactional
   public ComentarioDTO insert(long postId,long usuarioId, ComentarioDTO comentarioDTO) {
-    UsuarioDTO usuario = usuarioClient.pegarUsuarioPeloId(usuarioId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. ID: " + usuarioId));
+    ResponseEntity responseEntity = usuarioClient.pegarUsuarioPeloId(usuarioId);
+
+    if(responseEntity.getStatusCode().value() == 404) {
+      throw new ResourceNotFoundException("Usuário não encontrado: ID " + usuarioId);
+    }
+
     Post post = postsRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post não encontrado. ID: " + usuarioId));
 
-    Comentario comentario = new Comentario(comentarioDTO.getNome(),usuario.getId(),post);
+    Comentario comentario = new Comentario(comentarioDTO.getNome(),usuarioId,post);
     comentarioRepository.save(comentario);
 
     post.getComentarios().add(comentario);

@@ -48,7 +48,12 @@ public class ComentarioService {
 
   @Transactional
   public ComentarioDTO insert(long postId,long usuarioId, ComentarioDTO comentarioDTO) {
-    ResponseEntity responseEntity = usuarioClient.pegarUsuarioPeloId(usuarioId);
+    ResponseEntity<UsuarioDTO> responseEntity = usuarioClient.pegarUsuarioPeloId(usuarioId);
+
+
+    if(responseEntity.getStatusCode().value() == 503) {
+      throw new ResourceNotFoundException("0 ms-usuario precisa estar ligado para funcionar");
+    }
 
     if(responseEntity.getStatusCode().value() == 404) {
       throw new ResourceNotFoundException("Usuário não encontrado: ID " + usuarioId);
@@ -56,7 +61,7 @@ public class ComentarioService {
 
     Post post = postsRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post não encontrado. ID: " + usuarioId));
 
-    Comentario comentario = new Comentario(comentarioDTO.getNome(),usuarioId,post);
+    Comentario comentario = new Comentario(comentarioDTO.getNome(),responseEntity.getBody().getId(),post);
     comentarioRepository.save(comentario);
 
     post.getComentarios().add(comentario);

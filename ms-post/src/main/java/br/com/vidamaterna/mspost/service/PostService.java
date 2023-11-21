@@ -44,7 +44,7 @@ public class PostService {
 
   @Transactional
   public PostDTO insert(long usuarioId,PostDTO postDTO) {
-    ResponseEntity responseEntity = usuarioClient.pegarUsuarioPeloId(usuarioId);
+    ResponseEntity<UsuarioDTO> responseEntity = usuarioClient.pegarUsuarioPeloId(usuarioId);
 
     if(responseEntity.getStatusCode().value() == 404) {
       throw new ResourceNotFoundException("Usuário não encontrado: ID " + usuarioId);
@@ -54,7 +54,7 @@ public class PostService {
     post.setNome(postDTO.getNome());
     post.setDescricao(postDTO.getDescricao());
     post.setConteudo(postDTO.getConteudo());
-    post.setUsuarioId(usuarioId);
+    post.setUsuarioId(responseEntity.getBody().getId());
 
     postRepository.save(post);
 

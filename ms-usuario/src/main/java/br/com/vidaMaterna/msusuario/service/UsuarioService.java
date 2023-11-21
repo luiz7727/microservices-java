@@ -7,7 +7,9 @@ import br.com.vidaMaterna.msusuario.http.PostClient;
 import br.com.vidaMaterna.msusuario.model.Usuario;
 import br.com.vidaMaterna.msusuario.repository.UsuarioRepository;
 import br.com.vidaMaterna.msusuario.service.exception.ResourceNotFoundException;
+import br.com.vidaMaterna.msusuario.service.exception.ServerNotAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +41,19 @@ public class UsuarioService {
   public UsuarioDTO findById(long usuarioId) {
     Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado. ID: " + usuarioId));
     // Get all posts from user
-    List<PostDTO> posts = postClient.pegarTodosPostPeloUsuarioId(usuarioId).getBody();
+    ResponseEntity<List<PostDTO>> postResponseEntity = postClient.pegarTodosPostPeloUsuarioId(usuarioId);
+
+    if(postResponseEntity.getStatusCode().value() == 503 ) {
+      throw new ServerNotAvailableException("O ms-post precisa ser ligado para funcionar");
+    }
 
     // Get all comments from user
-    List<ComentarioDTO> comentarios = postClient.pegarTodosComentariosPeloUsuarioId(usuarioId).getBody();
+    ResponseEntity<List<ComentarioDTO>> comentarioResponseEntity = postClient.pegarTodosComentariosPeloUsuarioId(usuarioId);
 
-    return new UsuarioDTO(usuario.getId(),usuario.getNome(),usuario.getEmail(),usuario.getSenha(),comentarios,posts);
+    if(comentarioResponseEntity.getStatusCode().value() == 503 ) {
+      throw new ServerNotAvailableException("O ms-post precisa ser ligado para funcionar");
+    }
+    return new UsuarioDTO(usuario.getId(),usuario.getNome(),usuario.getEmail(),usuario.getSenha(),comentarioResponseEntity.getBody(),postResponseEntity.getBody());
   }
 
   @Transactional
